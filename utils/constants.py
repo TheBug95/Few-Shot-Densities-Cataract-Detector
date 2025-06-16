@@ -17,6 +17,16 @@ BATCH_SIZE   = 32
 NUM_CLASSES  = 2
 RANDOM_SEED  = 42
 
+# ─── rutas de entrenamiento y validación ─────────────────────────
+CATARACT_TRAIN_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "train"
+CATARACT_VALID_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "valid"
+CATARACT_TEST_SPLIT   = ROOT_DIR / "datasets" / "cataract_detection" / "test"
+
+# ─── categorias dataset  ──────────────────────
+NORMAL_CAT_ID = 2
+MILD_CAT_ID = 1
+SEVERE_CAT_ID = 3
+
 # ─── enumeraciones útiles ─────────────────────────────────────────
 class Backbone(str, Enum):
     RESNET18 = "r18"
@@ -30,3 +40,7 @@ class BinningMethod(str, Enum):
     AUTO = "auto"
     FIXED_20 = "fixed_20"
     FIXED_30 = "fixed_30"
+    
+class BandwidthMethod(str, Enum):
+    SCOTT = "scott"
+    SILVERMAN = "silverman"

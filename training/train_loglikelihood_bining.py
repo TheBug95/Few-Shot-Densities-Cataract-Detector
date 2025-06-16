@@ -7,7 +7,11 @@ from utils.constants import (
     DATASETS_PROCESSED_CATARACT_DIR, 
     RANDOM_SEED, 
     INPUT_SIZE,
-    Backbone, 
+    MODELS_BACKBONES_DIR,
+    NORMAL_CAT_ID,
+    CATARACT_TRAIN_SPLIT,
+    Backbone,
+    BandwidthMethod, 
     BinningMethod
 )
 import torch, torchvision.transforms as T
@@ -20,14 +24,10 @@ class FewShotDensityTrainerKDELeaveOneOut:
 
     def __init__(self,
                  coco_ann_train: str,
-                 images_dir_train: str,
                  weights_models: str,
                  proc_dir: str = DATASETS_PROCESSED_CATARACT_DIR,
                  backbone: Backbone = Backbone.R18,
-                 input_size: int = INPUT_SIZE,
                  pad: int = 10,
-                 bw_method: BinningMethod = BinningMethod.SCOTT,
-                 normal_cat_id: int = 2,
                  device: str = None,
                  binning_strategy: BinningMethod = BinningMethod.SCOTT,
                  random_seed: int = RANDOM_SEED):
@@ -41,15 +41,11 @@ class FewShotDensityTrainerKDELeaveOneOut:
 
         # —–– COCO y paths —––––––––––––––––––––––––––––
         self.coco       = COCO(coco_ann_train)
-        self.images_dir = pathlib.Path(images_dir_train)
         self.proc_dir   = pathlib.Path(proc_dir)
         self.proc_dir.mkdir(exist_ok=True, parents=True)
 
         # —–– Parámetros —––––––––––––––––––––––––––––––
         self.pad        = pad
-        self.input_size = input_size
-        self.bw_method  = bw_method
-        self.normal_id  = normal_cat_id
         self.device     = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.backbone   = backbone.lower()
         self.weights_models = weights_models
@@ -58,7 +54,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
         
         # —–– Transformación para ResNet —––––––––––––––
         self.tf = T.Compose([
-            T.Resize((input_size,input_size)),
+            T.Resize((INPUT_SIZE, INPUT_SIZE)),
             T.ToTensor(),
             T.Normalize([0.485,0.456,0.406],[0.229,0.224,0.225])
         ])
@@ -85,14 +81,14 @@ class FewShotDensityTrainerKDELeaveOneOut:
 
         # Dimensión de embedding (se infiere con un tensor dummy)
         with torch.no_grad():
-            dummy = torch.zeros(1, 3, input_size, input_size).to(self.device)
+            dummy = torch.zeros(1, 3, INPUT_SIZE, INPUT_SIZE).to(self.device)
             feat  = self.model(dummy)
             self.feat_dim = int(feat.reshape(1, -1).shape[1])
 
         # —–– Pre-cache IDs positivos y normales —–––––––
         all_ids = self.coco.getImgIds()
         self.pos_ids  = [iid for iid in all_ids
-                         if any(a["category_id"]!=self.normal_id
+                         if any(a["category_id"]!=NORMAL_CAT_ID
                                 for a in self.coco.loadAnns(self.coco.getAnnIds(imgIds=[iid])))]
 
         print(f"Inicializado con {len(self.pos_ids)} imágenes positivas")
@@ -121,7 +117,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
         """
         try:
             info = self.coco.loadImgs(iid)[0]
-            img_path = self.images_dir / info["file_name"]
+            img_path = CATARACT_TRAIN_SPLIT / info["file_name"]
 
             if not img_path.exists():
                 raise FileNotFoundError(f"Imagen no encontrada: {img_path}")
@@ -132,7 +128,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
             if positive:
                 ann = next(a for a in self.coco.loadAnns(
                             self.coco.getAnnIds(imgIds=[iid]))
-                        if a["category_id"] != self.normal_id)
+                        if a["category_id"] != NORMAL_CAT_ID)
                 rle = maskUtils.frPyObjects(ann["segmentation"], H, W)
                 rle = maskUtils.merge(rle)
                 m = maskUtils.decode(rle).astype(bool)
@@ -140,20 +136,20 @@ class FewShotDensityTrainerKDELeaveOneOut:
 
                 if len(xs) == 0 or len(ys) == 0:
                     # Fallback si no hay píxeles en la máscara
-                    crop = img.resize((self.input_size, self.input_size), Image.BILINEAR)
+                    crop = img.resize((INPUT_SIZE, INPUT_SIZE), Image.BILINEAR)
                 else:
                     x0, x1 = max(xs.min()-self.pad, 0), min(xs.max()+self.pad, W)
                     y0, y1 = max(ys.min()-self.pad, 0), min(ys.max()+self.pad, H)
                     crop = img.crop((x0, y0, x1, y1))
             else:
-                crop = img.resize((self.input_size, self.input_size), Image.BILINEAR)
+                crop = img.resize((INPUT_SIZE, INPUT_SIZE), Image.BILINEAR)
 
             return crop
 
         except Exception as e:
             print(f"Error cargando imagen {iid}: {e}")
             # Fallback: imagen negra
-            return Image.new('RGB', (self.input_size, self.input_size), (0, 0, 0))
+            return Image.new('RGB', (INPUT_SIZE, INPUT_SIZE), (0, 0, 0))
 
     # ==================== MÉTODOS DE BINNING ====================
     def _theta_from_hist(self, d: np.ndarray, method) -> float:
@@ -176,17 +172,17 @@ class FewShotDensityTrainerKDELeaveOneOut:
 
     def _get_theta(self, d: np.ndarray):
         """Dispatcher para diferentes estrategias de binning"""
-        if self.binning_strategy == "fixed_20":
+        if self.binning_strategy == BinningMethod.FIXED_20:
             return self._theta_from_hist(d, 20)
-        elif self.binning_strategy == "fixed_30":
+        elif self.binning_strategy == BinningMethod.FIXED_30:
             return self._theta_from_hist(d, 30)
-        elif self.binning_strategy == "auto":
+        elif self.binning_strategy == BinningMethod.AUTO:
             return self._theta_from_hist(d, "auto")
-        elif self.binning_strategy == "scott":
+        elif self.binning_strategy == BinningMethod.SCOTT:
             return self._theta_from_hist(d, "scott")
-        elif self.binning_strategy == "fd":
+        elif self.binning_strategy == BinningMethod.FD:
             return self._theta_from_hist(d, "fd")
-        elif self.binning_strategy == "sturges":
+        elif self.binning_strategy == BinningMethod.STURGES:
             return self._theta_from_hist(d, "sturges")
         else:
             raise ValueError(f"Estrategia no reconocida: {self.binning_strategy}")
@@ -229,7 +225,6 @@ class FewShotDensityTrainerKDELeaveOneOut:
                 # 3) Leave-One-Out Cross Validation
                 print("Realizando Leave-One-Out CV...")
                 logp_loo = []
-                bw = self._scott_bw(k-1) if self.bw_method == "scott" else float(self.bw_method)
 
                 for idx in range(k):
                     # Separar train/test
@@ -238,7 +233,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
 
                     # Entrenar KDEs
                     kdes_idx = [
-                        KernelDensity(kernel="gaussian", bandwidth=bw).fit(S_train[:, d:d+1])
+                        KernelDensity(kernel="gaussian", bandwidth=BandwidthMethod.SCOTT).fit(S_train[:, d:d+1])
                         for d in range(self.feat_dim)
                     ]
 
@@ -260,7 +255,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
                 # 5) KDE definitivo con todas las muestras
                 print("Entrenando KDE definitivo...")
                 kdes = [
-                    KernelDensity(kernel="gaussian", bandwidth=bw).fit(S_pos[:, d:d+1])
+                    KernelDensity(kernel="gaussian", bandwidth=BandwidthMethod.SCOTT).fit(S_pos[:, d:d+1])
                     for d in range(self.feat_dim)
                 ]
 
@@ -285,7 +280,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
 
         # Guardar prototipos
         suffix = f"{self.binning_strategy}_{self.backbone}_seed{self.random_seed}"
-        out = self.proc_dir / f"kde_univar_protos_{suffix}.pkl"
+        out = MODELS_BACKBONES_DIR / f"kde_univar_protos_{suffix}.pkl"
 
         with open(out, "wb") as fp:
             pickle.dump({
@@ -294,8 +289,8 @@ class FewShotDensityTrainerKDELeaveOneOut:
                     "binning_strategy": self.binning_strategy,
                     "backbone": self.backbone,
                     "random_seed": self.random_seed,
-                    "bw_method": self.bw_method,
-                    "input_size": self.input_size,
+                    "bw_method": BandwidthMethod.SCOTT,
+                    "input_size": INPUT_SIZE,
                     "pad": self.pad
                 }
             }, fp)
