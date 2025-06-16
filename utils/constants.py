@@ -3,11 +3,14 @@ from enum import Enum, auto
 
 # ─── rutas base ────────────────────────────────────────────────────
 ROOT_DIR   = Path(__file__).resolve().parent.parent
+
 DATASETS_CATARACT_DIR   = ROOT_DIR / "datasets" / "cataract_detection"
 DATASETS_PROCESSED_CATARACT_DIR = ROOT_DIR / "datasets" / "cataract_detection" / "processed"
+
 MODELS_BACKBONES_DIR = ROOT_DIR / "models" / "backbones"
 MODELS_PROTOTYPES_DIR = ROOT_DIR / "models" / "prototypes"
 MODELS_SAM_ZOO_DIR = ROOT_DIR / "models" / "sam_zoo"
+
 # ─── parámetros de entrenamiento ──────────────────────────────────
 INPUT_SIZE   = 224
 BATCH_SIZE   = 32
