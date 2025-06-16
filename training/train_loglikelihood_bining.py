@@ -10,21 +10,21 @@ from utils.constants import (
     MODELS_BACKBONES_DIR,
     NORMAL_CAT_ID,
     CATARACT_TRAIN_SPLIT,
+    CATARACT_COCO_TRAIN_SPLIT,
     Backbone,
+    BackbonesWeights,
     BandwidthMethod, 
     BinningMethod
 )
-import torch, torchvision.transforms as T
 from torchvision import models
-from typing import Union, Dict, List, Tuple
+import torch, torchvision.transforms as T
 import warnings
 
 
 class FewShotDensityTrainerKDELeaveOneOut:
 
     def __init__(self,
-                 coco_ann_train: str,
-                 weights_models: str,
+                 weights_models: BackbonesWeights = BackbonesWeights.RESNET18,
                  proc_dir: str = DATASETS_PROCESSED_CATARACT_DIR,
                  backbone: Backbone = Backbone.R18,
                  pad: int = 10,
@@ -40,7 +40,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
             torch.cuda.manual_seed(random_seed)
 
         # —–– COCO y paths —––––––––––––––––––––––––––––
-        self.coco       = COCO(coco_ann_train)
+        self.coco       = COCO(CATARACT_COCO_TRAIN_SPLIT)
         self.proc_dir   = pathlib.Path(proc_dir)
         self.proc_dir.mkdir(exist_ok=True, parents=True)
 

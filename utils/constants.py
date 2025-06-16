@@ -1,5 +1,6 @@
 from pathlib import Path
 from enum import Enum, auto
+from torchvision import models
 
 # ─── rutas base ────────────────────────────────────────────────────
 ROOT_DIR   = Path(__file__).resolve().parent.parent
@@ -21,6 +22,11 @@ RANDOM_SEED  = 42
 CATARACT_TRAIN_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "train"
 CATARACT_VALID_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "valid"
 CATARACT_TEST_SPLIT   = ROOT_DIR / "datasets" / "cataract_detection" / "test"
+
+# ─── rutas de segmentaciones COCO ─────────────────────────────
+CATARACT_COCO_TRAIN_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "coco-segmentation" / "train" / "_annotations.coco.json"
+CATARACT_COCO_VALID_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "coco-segmentation" / "valid" / "_annotations.coco.json"
+CATARACT_COCO_TEST_SPLIT   = ROOT_DIR / "datasets" / "cataract_detection" / "coco-segmentation" / "test" / "_annotations.coco.json"
 
 # ─── categorias dataset  ──────────────────────
 NORMAL_CAT_ID = 2
@@ -44,3 +50,8 @@ class BinningMethod(str, Enum):
 class BandwidthMethod(str, Enum):
     SCOTT = "scott"
     SILVERMAN = "silverman"
+    
+class BackbonesWeights(str, Enum):
+    RESNET18 = models.ResNet18_Weights.DEFAULT
+    RESNET34 = models.ResNet34_Weights.DEFAULT
+    VIT_B16  = models.ViT_B_16_Weights.DEFAULT
