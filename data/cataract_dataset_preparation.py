@@ -2,21 +2,22 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 from tqdm.auto import tqdm
 from pycocotools.coco import COCO
+from utils.constants import DATASETS_PROCESSED_CATARACT_DIR, DatasetCataractSplit, ROOT_DIR
 import glob, pathlib, json
 import cv2
 
 @dataclass
 class CataractDatasetPrep:
-    root: str
-    out_dir: str = "processed"
+    root: str = ROOT_DIR
+    out_dir: str = DATASETS_PROCESSED_CATARACT_DIR
     cat_ids: Optional[List[int]] = None
 
     def _process_img(self, src: str, dst: str):
         img = cv2.imread(src, cv2.IMREAD_COLOR)
         cv2.imwrite(dst, img)
 
-    def _img_out_dir(self, split: str) -> pathlib.Path:
-        d = pathlib.Path(self.out_dir)/"images"/split
+    def _img_out_dir(self, split: DatasetCataractSplit) -> pathlib.Path:
+        d = pathlib.Path(self.out_dir)/"images"/split.value
         d.mkdir(parents=True, exist_ok=True)
         return d
 
@@ -28,7 +29,7 @@ class CataractDatasetPrep:
 
     def run(self):
         index = []
-        for split in ("train","valid","test"):
+        for split in (DatasetCataractSplit.TRAIN, DatasetCataractSplit.VALID, DatasetCataractSplit.TEST):
             split_dir = pathlib.Path(self.root)/split
             ann_file  = self._find_json(split_dir)
             coco      = COCO(ann_file)
