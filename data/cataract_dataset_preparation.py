@@ -2,7 +2,12 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 from tqdm.auto import tqdm
 from pycocotools.coco import COCO
-from utils.constants import DATASETS_PROCESSED_CATARACT_DIR, DatasetCataractSplit, ROOT_DIR
+from utils.constants import (
+    DATASETS_PROCESSED_CATARACT_DIR, 
+    DatasetCataractSplit, 
+    ROOT_DIR, 
+    DATASETS_CATARACT_DIR
+)
 import glob, pathlib, json
 import cv2
 
@@ -16,21 +21,24 @@ class CataractDatasetPrep:
         img = cv2.imread(src, cv2.IMREAD_COLOR)
         cv2.imwrite(dst, img)
 
-    def _img_out_dir(self, split: DatasetCataractSplit) -> pathlib.Path:
-        d = pathlib.Path(self.out_dir)/"images"/split.value
+    def _img_out_dir(self, split: str) -> pathlib.Path:
+        d = self.out_dir/"images"/split
         d.mkdir(parents=True, exist_ok=True)
         return d
 
-    def _find_json(self, split_dir: pathlib.Path) -> str:
+    def _find_json(self, split_dir: str) -> str:
         js = glob.glob(str(split_dir/"*.json"))
+        print(f"Buscando JSON en {split_dir}: {js}")
         if not js:
-            raise FileNotFoundError(f"No JSON en {split_dir}")
+            raise FileNotFoundError(f"No JSON en {split_dir}!")
         return js[0]
 
     def run(self):
         index = []
-        for split in (DatasetCataractSplit.TRAIN, DatasetCataractSplit.VALID, DatasetCataractSplit.TEST):
-            split_dir = pathlib.Path(self.root)/split
+        for split in (DatasetCataractSplit.TRAIN.value, DatasetCataractSplit.VALID.value, DatasetCataractSplit.TEST.value):
+            print(f"Procesando {split}...")
+            split_dir = DATASETS_CATARACT_DIR/split
+            print(f"Directorio de imágenes: {split_dir}")
             ann_file  = self._find_json(split_dir)
             coco      = COCO(ann_file)
             img_out   = self._img_out_dir(split)
