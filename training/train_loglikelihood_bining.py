@@ -280,6 +280,9 @@ class FewShotDensityTrainerKDELeaveOneOut:
 
         # Guardar prototipos
         suffix = f"{self.binning_strategy}_{self.backbone}_seed{self.random_seed}"
+        
+        #si no esta creada la carpeta de MODELS_BACKBONES_DIR, la creamos
+        MODELS_BACKBONES_DIR.mkdir(parents=True, exist_ok=True)
         out = MODELS_BACKBONES_DIR / f"kde_univar_protos_{suffix}.pkl"
 
         with open(out, "wb") as fp:
