@@ -1,6 +1,7 @@
 from pathlib import Path
 from enum import Enum, auto
 from torchvision import models
+import torch
 
 # ─── rutas base ────────────────────────────────────────────────────
 ROOT_DIR   = Path(__file__).resolve().parent.parent
@@ -32,6 +33,9 @@ CATARACT_COCO_TEST_SPLIT   = ROOT_DIR / "datasets" / "cataract_detection" / "coc
 NORMAL_CAT_ID = 2
 MILD_CAT_ID = 1
 SEVERE_CAT_ID = 3
+
+# ─── dispositivo ─────────────────────
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 # ─── enumeraciones útiles ─────────────────────────────────────────
 class Backbone(str, Enum):

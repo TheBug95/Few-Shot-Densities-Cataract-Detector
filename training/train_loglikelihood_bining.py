@@ -4,16 +4,17 @@ from pycocotools.coco import COCO
 from pycocotools import mask as maskUtils
 from PIL import Image
 from utils.constants import (
+    CATARACT_COCO_TRAIN_SPLIT,
+    CATARACT_TRAIN_SPLIT,
     DATASETS_PROCESSED_CATARACT_DIR, 
-    RANDOM_SEED, 
+    DEVICE,
     INPUT_SIZE,
     MODELS_BACKBONES_DIR,
     NORMAL_CAT_ID,
-    CATARACT_TRAIN_SPLIT,
-    CATARACT_COCO_TRAIN_SPLIT,
+    RANDOM_SEED, 
+    BandwidthMethod,
     Backbone,
     BackbonesWeights,
-    BandwidthMethod, 
     BinningMethod
 )
 from torchvision import models
@@ -26,9 +27,8 @@ class FewShotDensityTrainerKDELeaveOneOut:
     def __init__(self,
                  weights_models: BackbonesWeights = BackbonesWeights.RESNET18,
                  proc_dir: str = DATASETS_PROCESSED_CATARACT_DIR,
-                 backbone: Backbone = Backbone.R18,
+                 backbone: Backbone = Backbone.RESNET18,
                  pad: int = 10,
-                 device: str = None,
                  binning_strategy: BinningMethod = BinningMethod.SCOTT,
                  random_seed: int = RANDOM_SEED):
 
@@ -46,7 +46,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
 
         # —–– Parámetros —––––––––––––––––––––––––––––––
         self.pad        = pad
-        self.device     = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.device     = DEVICE
         self.backbone   = backbone.lower()
         self.weights_models = weights_models
         self.binning_strategy = binning_strategy
