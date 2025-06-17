@@ -59,3 +59,8 @@ class BackbonesWeights(str, Enum):
     RESNET18 = models.ResNet18_Weights.DEFAULT
     RESNET34 = models.ResNet34_Weights.DEFAULT
     VIT_B16  = models.ViT_B_16_Weights.DEFAULT
+    
+class DatasetCataractSplit(str, Enum):
+    TRAIN = "train"
+    VALID = "valid"
+    TEST  = "test"
