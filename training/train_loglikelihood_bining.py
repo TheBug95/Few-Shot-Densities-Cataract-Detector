@@ -60,11 +60,11 @@ class FewShotDensityTrainerKDELeaveOneOut:
         ])
 
         # —–– Backbone sin FC final —–––––––––––––––––––
-        if self.backbone == Backbone.R18:
+        if self.backbone == Backbone.RESNET18:
             net = models.resnet18(weights=self.weights_models)
             self.model = torch.nn.Sequential(*list(net.children())[:-1])
 
-        elif self.backbone == Backbone.R34:
+        elif self.backbone == Backbone.RESNET34:
             net = models.resnet34(weights=self.weights_models)
             self.model = torch.nn.Sequential(*list(net.children())[:-1])
 

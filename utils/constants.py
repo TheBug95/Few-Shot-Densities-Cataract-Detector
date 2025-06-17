@@ -25,9 +25,9 @@ CATARACT_VALID_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "valid"
 CATARACT_TEST_SPLIT   = ROOT_DIR / "datasets" / "cataract_detection" / "test"
 
 # ─── rutas de segmentaciones COCO ─────────────────────────────
-CATARACT_COCO_TRAIN_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "coco-segmentation" / "train" / "_annotations.coco.json"
-CATARACT_COCO_VALID_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "coco-segmentation" / "valid" / "_annotations.coco.json"
-CATARACT_COCO_TEST_SPLIT   = ROOT_DIR / "datasets" / "cataract_detection" / "coco-segmentation" / "test" / "_annotations.coco.json"
+CATARACT_COCO_TRAIN_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "train" / "_annotations.coco.json"
+CATARACT_COCO_VALID_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "valid" / "_annotations.coco.json"
+CATARACT_COCO_TEST_SPLIT   = ROOT_DIR / "datasets" / "cataract_detection" / "test" / "_annotations.coco.json"
 
 # ─── categorias dataset  ──────────────────────
 NORMAL_CAT_ID = 2
