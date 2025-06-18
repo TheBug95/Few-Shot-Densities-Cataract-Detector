@@ -88,10 +88,19 @@ class FewShotKDEInferencer:
         return preds
 
     # ----------------------------------------------------------
-    def infer(self, sample_n: int | None = None) -> Dict[int, List[int]]:
-        """Procesa `sample_n` imágenes (o todas) y devuelve {k: [preds]}."""
+    def infer(
+        self,
+        sample_n: int | None = None,
+        return_ids: bool = False
+    ) -> Dict[int, List[int]] | tuple[Dict[int, List[int]], list[int]]:
+        """
+        Procesa `sample_n` imágenes aleatorias (o todas) y devuelve:
+            • dict {k: [pred_0, pred_1, …]}
+            • si `return_ids=True`, también la lista de IDs evaluados
+        """
         print(f"\n=== Inferencia usando {self.backbone_name} ===")
         preds_by_k = {k: [] for k in self.ks}
+        used_ids   = []                      
 
         for split in self.splits:
             coco    = COCO(self.root / f"{split}/_annotations.coco.json")
@@ -104,8 +113,11 @@ class FewShotKDEInferencer:
             for iid in tqdm(img_ids, desc=f"[{split}]"):
                 info = coco.loadImgs(iid)[0]
                 img  = Image.open(img_dir / info["file_name"]).convert("RGB")
+
                 img_preds = self._predict_image(img)
                 for k, p in img_preds.items():
                     preds_by_k[k].append(p)
 
-        return preds_by_k
+            used_ids.extend(img_ids)         
+
+        return (preds_by_k, used_ids) if return_ids else preds_by_k 

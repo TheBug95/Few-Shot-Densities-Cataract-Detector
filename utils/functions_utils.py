@@ -10,10 +10,13 @@ import pickle
 # ground-truth (1: catarata, 0: normal)
 split = DatasetCataractSplit.VALID.value
 coco    = COCO(str(DATASETS_CATARACT_DIR/f"{split}/_annotations.coco.json"))
+
+all_img_ids = coco.getImgIds() 
+
 y_true = np.array([
     int(any(a["category_id"] != NORMAL_CAT_ID
             for a in coco.loadAnns(coco.getAnnIds(imgIds=[iid]))))
-    for iid in coco.getImgIds()
+    for iid in all_img_ids
 ])
 
 def calculate_accuracy(y_preds, y_true, proto_path):
