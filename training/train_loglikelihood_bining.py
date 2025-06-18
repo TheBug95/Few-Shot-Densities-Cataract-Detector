@@ -152,7 +152,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
             return Image.new('RGB', (INPUT_SIZE, INPUT_SIZE), (0, 0, 0))
 
     # ==================== MÉTODOS DE BINNING ====================
-    def _theta_from_hist(self, d: np.ndarray, method) -> float:
+    def _theta_from_hist(self, d: np.ndarray, method):
         """Método 2: Métodos automáticos de numpy"""
         if len(d) == 0:
             return 0.0
@@ -160,11 +160,14 @@ class FewShotDensityTrainerKDELeaveOneOut:
         try:
             hist, edges = np.histogram(d, bins=method)
             nz = np.nonzero(hist)[0]
-
             if len(nz) == 0:
-                return float(np.min(d)), float(np.max(d))
+                return float(d.min()), float(d.max())
 
-            return float(edges[nz[0]]), float(edges[nz[-1] + 1])
+            # Usa los bordes INTERIORES en vez de extremos absolutos
+            theta_min = float(edges[nz[0] + 1])         # borde derecho del primer bin con datos
+            theta_max = float(edges[nz[-1]])            # borde izquierdo del último bin con datos
+            
+            return theta_min, theta_max
         except Exception as e:
             warnings.warn(f"Error con método {method}: {e}. Usando fallback.")
             return float(np.min(d)), float(np.max(d))
@@ -180,7 +183,7 @@ class FewShotDensityTrainerKDELeaveOneOut:
             return self._theta_from_hist(d, "auto")
         elif self.binning_strategy == BinningMethod.SCOTT:
             return self._theta_from_hist(d, "scott")
-        elif self.binning_strategy == BinningMethod.FD:
+        elif self.binning_strategy == BinningMethod.FREEDMAN_DIACONIS:
             return self._theta_from_hist(d, "fd")
         elif self.binning_strategy == BinningMethod.STURGES:
             return self._theta_from_hist(d, "sturges")

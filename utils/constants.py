@@ -47,7 +47,7 @@ class Backbone(str, Enum):
 class BinningMethod(str, Enum):
     SCOTT = "scott"
     STURGES = "sturges"
-    FREEDMAN_DIACONIS = "freedman_diaconis"
+    FREEDMAN_DIACONIS = "fd"
     AUTO = "auto"
     FIXED_20 = "fixed_20"
     FIXED_30 = "fixed_30"
