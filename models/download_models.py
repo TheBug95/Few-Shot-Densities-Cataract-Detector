@@ -32,7 +32,7 @@ class SAMModelManager:
             "pip": "git+https://github.com/SysCV/sam-hq.git",
             "variants": {
                 "vit_l": ("url ", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_l.pth"),
-                "vit_t": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_t.pth"),
+                "vit_t": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_tiny.pth"),
                 "vit_h": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_h.pth"),
                 "vit_b": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_b.pth"),
                 "hiera_l_2.1": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam2.1_hq_hiera_large.pt"),
