@@ -7,7 +7,7 @@ import torch
 ROOT_DIR   = Path(__file__).resolve().parent.parent
 
 DATASETS_CATARACT_DIR   = ROOT_DIR / "datasets" / "cataract_detection"
-DATASETS_PROCESSED_CATARACT_DIR = ROOT_DIR / "datasets" / "cataract_detection" / "processed"
+DATASETS_PROCESSED_CATARACT_DIR = ROOT_DIR / "datasets" / "cataract_detection" / "processed" / "images" 
 
 MODELS_BACKBONES_DIR = ROOT_DIR / "models" / "backbones"
 MODELS_PROTOTYPES_DIR = ROOT_DIR / "models" / "prototypes"
