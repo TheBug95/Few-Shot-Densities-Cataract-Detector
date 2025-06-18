@@ -22,7 +22,7 @@ class CataractDatasetPrep:
         cv2.imwrite(dst, img)
 
     def _img_out_dir(self, split: str) -> pathlib.Path:
-        d = self.out_dir/"images"/split
+        d = self.out_dir/split
         d.mkdir(parents=True, exist_ok=True)
         return d
 
