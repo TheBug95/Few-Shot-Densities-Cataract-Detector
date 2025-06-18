@@ -33,7 +33,7 @@ class FewShotKDEInferencer:
         self.splits          = splits
         self.normal_cat_id   = normal_cat_id
 
-        self._load_prototypes()          # ← detecta formato
+        self._load_prototypes()          
 
         print(f"✓ Cargados {len(self.ks)} valores de k "
               f"desde '{self.proto_path.name}'")
@@ -65,7 +65,7 @@ class FewShotKDEInferencer:
             proto   = self.protos[k]
             kdes    = proto["kdes"]
             t_min   = proto.get("theta_min", -np.inf)
-            t_max   = proto.get("theta_max",  np.inf)   # por si lo necesitas
+            t_max   = proto.get("theta_max",  np.inf)   
 
             img_pred = 0
             for m in masks:

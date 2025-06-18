@@ -18,6 +18,7 @@ INPUT_SIZE   = 224
 BATCH_SIZE   = 32
 NUM_CLASSES  = 2
 RANDOM_SEED  = 42
+ITERATIONS   = 10
 
 # ─── rutas de entrenamiento y validación ─────────────────────────
 CATARACT_TRAIN_SPLIT  = ROOT_DIR / "datasets" / "cataract_detection" / "train"
