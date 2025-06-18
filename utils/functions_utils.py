@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import pandas as pd
-from constants import NORMAL_CAT_ID, DATASETS_CATARACT_DIR, DatasetCataractSplit
+from utils.constants import NORMAL_CAT_ID, DATASETS_CATARACT_DIR, DatasetCataractSplit
 from pycocotools.coco import COCO
 from pathlib import Path
 import pickle
