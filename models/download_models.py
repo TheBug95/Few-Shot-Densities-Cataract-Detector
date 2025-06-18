@@ -32,7 +32,7 @@ class SAMModelManager:
             "pip": "git+https://github.com/SysCV/sam-hq.git",
             "variants": {
                 "vit_l": ("url ", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_l.pth"),
-                "vit_t": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_tiny.pth"),
+                "vit_t": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_t.pth"),
                 "vit_h": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_h.pth"),
                 "vit_b": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_b.pth"),
                 "hiera_l_2.1": ("url", "https://huggingface.co/lkeab/hq-sam/resolve/main/sam2.1_hq_hiera_large.pt"),
@@ -43,14 +43,14 @@ class SAMModelManager:
         "medsam": {
             "pip": "git+https://github.com/bowang-lab/MedSAM.git",
             "variants": {
-                "medsam1": ("url", "https://huggingface.co/wanglab/medsam-vit-base/resolve/main/pytorch_model.bin"),
+                "medsam1": ("url", "https://zenodo.org/records/10689643/files/medsam_vit_b.pth"),
                 "medsam2_latest": ("url", "https://huggingface.co/wanglab/MedSAM2/resolve/main/MedSAM2_latest.pt"),
             },
         },
     }
 
     # -----------------------------------------------------------------------
-    def __init__(self, root_dir: str = "Models"):
+    def __init__(self, root_dir: str):
         self.root = Path(root_dir).expanduser()
         self.root.mkdir(parents=True, exist_ok=True)
 

@@ -11,7 +11,7 @@ DATASETS_PROCESSED_CATARACT_DIR = ROOT_DIR / "datasets" / "cataract_detection" /
 
 MODELS_BACKBONES_DIR = ROOT_DIR / "models" / "backbones"
 MODELS_PROTOTYPES_DIR = ROOT_DIR / "models" / "prototypes"
-MODELS_SAM_ZOO_DIR = ROOT_DIR / "models" / "sam_zoo"
+MODELS_SAM_ZOO_DIR = ROOT_DIR / "models" / "sam zoo"
 
 # ─── parámetros de entrenamiento ──────────────────────────────────
 INPUT_SIZE   = 224
@@ -64,3 +64,4 @@ class DatasetCataractSplit(str, Enum):
     TRAIN = "train"
     VALID = "valid"
     TEST  = "test"
+    
