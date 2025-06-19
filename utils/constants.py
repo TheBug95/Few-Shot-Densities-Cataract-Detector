@@ -85,9 +85,8 @@ class ProtosFileNames(str, Enum):
     KDE_FIXED_20_R34 = "kde_univar_protos_fixed_20_r34_seed42.pkl"
     KDE_FIXED_20_R18 = "kde_univar_protos_fixed_20_r18_seed42.pkl"
     KDE_STURGES_R18 = "kde_univar_protos_sturges_r18_seed42.pkl"
-
-
-# ─── Variables Fijas para la Inferencia con Resnet-18 ───────────
+    
+"""# ─── Variables Fijas para la Inferencia con Resnet-18 ───────────
 
 EXPERS_R18 = [
     dict(
@@ -188,4 +187,4 @@ EXPERS_VIT_B_16 = [
         extractor = train_vit_b_16_fd._get_embedding,
         excel   = "fd_vit_b_16",
     )
-]
+]"""
