@@ -86,4 +86,106 @@ class ProtosFileNames(str, Enum):
     KDE_FIXED_20_R18 = "kde_univar_protos_fixed_20_r18_seed42.pkl"
     KDE_STURGES_R18 = "kde_univar_protos_sturges_r18_seed42.pkl"
 
-    
+
+# ─── Variables Fijas para la Inferencia con Resnet-18 ───────────
+
+EXPERS_R18 = [
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_FIXED_30_R18.value,
+        extractor = train_resnet_18_fixed_30._get_embedding,
+        excel   = "fixed_30_r18",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_FIXED_20_R18.value,
+        extractor = train_resnet_18_fixed_20._get_embedding,
+        excel   = "fixed_20_r18",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_SCOTT_R18.value,
+        extractor = train_resnet_18_scott._get_embedding,
+        excel   = "scott_r18",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_STURGES_R18.value,
+        extractor = train_resnet_18_sturges._get_embedding,
+        excel   = "sturges_r18",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_AUTO_R18.value,
+        extractor = train_resnet_18_auto._get_embedding,
+        excel   = "auto_r18",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_FD_R18.value,
+        extractor = train_resnet_18_fd._get_embedding,
+        excel   = "fd_r18",
+    )
+]
+
+# ─── Variables Fijas para la Inferencia con Resnet-34 ───────────
+
+EXPERS_R34 = [
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_FIXED_30_R34.value,
+        extractor = train_resnet_34_fixed_30._get_embedding,
+        excel   = "fixed_30_r34",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_FIXED_20_R34.value,
+        extractor = train_resnet_34_fixed_20._get_embedding,
+        excel   = "fixed_20_r34",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_SCOTT_R34.value,
+        extractor = train_resnet_34_scott._get_embedding,
+        excel   = "scott_r34",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_STURGES_R34.value,
+        extractor = train_resnet_34_sturges._get_embedding,
+        excel   = "sturges_r34",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_AUTO_R34.value,
+        extractor = train_resnet_34_auto._get_embedding,
+        excel   = "auto_r34",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_FD_R34.value,
+        extractor = train_resnet_34_fd._get_embedding,
+        excel   = "fd_r34",
+    )
+]
+
+EXPERS_VIT_B_16 = [
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_FIXED_30_VIT_B_16.value,
+        extractor = train_vit_b_16_fixed_30._get_embedding,
+        excel   = "fixed_30_vit_b_16",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_FIXED_20_VIT_B_16.value,
+        extractor = train_vit_b_16_fixed_20._get_embedding,
+        excel   = "fixed_20_vit_b_16",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_SCOTT_VIT_B_16.value,
+        extractor = train_vit_b_16_scott._get_embedding,
+        excel   = "scott_vit_b_16",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_STURGES_VIT_B_16.value,
+        extractor = train_vit_b_16_sturges._get_embedding,
+        excel   = "sturges_vit_b_16",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_AUTO_VIT_B_16.value,
+        extractor = train_vit_b_16_auto._get_embedding,
+        excel   = "auto_vit_b_16",
+    ),
+    dict(
+        proto_path   = MODELS_BACKBONES_DIR / ProtosFileNames.KDE_FD_VIT_B_16.value,
+        extractor = train_vit_b_16_fd._get_embedding,
+        excel   = "fd_vit_b_16",
+    )
+]

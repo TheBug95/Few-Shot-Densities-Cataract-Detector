@@ -1,16 +1,23 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import seaborn as sns
-import pandas as pd
-import os
-import pickle
+from pathlib import Path
 from utils.constants import (
     DEVICE,
     NORMAL_CAT_ID,
     DATASETS_CATARACT_DIR,
+    RANDOM_SEED,
     DatasetCataractSplit
 )
+from inference.inference_min_treshold_cataract import FewShotKDEInferencer
 from pycocotools.coco import COCO
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import pandas as pd
+import random
+import os
+import pickle
+import torch
+
+
 
 # ground-truth (1: catarata, 0: normal)
 split = DatasetCataractSplit.VALID.value
@@ -169,3 +176,46 @@ def export_results_excel(accuracies_mean_std, results_name):
     df_std.to_excel(excel_path)
 
     print(f"Accuracies saved to {excel_path}")
+
+# ------------------------------------------------------------------
+# 1) Función genérica para el experimento de inferencia
+# ------------------------------------------------------------------
+def run_experiment(
+    proto_path: Path,
+    feature_extractor,
+    mask_generator,
+    name_excel: str,
+    backbone_name: str = "ResNet-18",
+    num_runs: int = 10,
+    sample_n: int = 1,
+):
+    inferencer = FewShotKDEInferencer(
+        proto_path      = proto_path,
+        mask_generator  = mask_generator,
+        feature_extractor = feature_extractor,
+        backbone_name   = backbone_name,
+        root            = DATASETS_CATARACT_DIR,
+        splits          = [DatasetCataractSplit.VALID.value],
+    )
+
+    acc_runs = {}
+    for run in range(num_runs):
+        seed = RANDOM_SEED + run
+        random.seed(seed); np.random.seed(seed)
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+
+        preds, ids_eval = inferencer.infer(sample_n=sample_n, return_ids=True)
+
+        mask       = np.isin(all_img_ids, ids_eval)
+        y_true_sub = y_true[mask]
+
+        acc_runs[run] = calculate_accuracy(preds, y_true_sub, proto_path)
+
+    acc_mean_std = calculate_mean_std_accuracy(acc_runs, num_runs)
+
+    export_results_excel(acc_mean_std, name_excel)
+    mean_std_plot(acc_mean_std, backbone_name)
+
+    return acc_mean_std
