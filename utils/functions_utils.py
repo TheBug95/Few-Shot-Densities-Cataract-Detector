@@ -151,7 +151,7 @@ def get_mask_generator(model_type: str, checkpoint: str):
 
     return SamAutomaticMaskGenerator(sam)
 
-def export_results_excel(accuracies_mean_std):
+def export_results_excel(accuracies_mean_std, results_name):
     """
     Exporta los resultados de las corridas (media y desviación estándar) de los accuracies
     a un archivo excel
@@ -162,10 +162,10 @@ def export_results_excel(accuracies_mean_std):
     os.makedirs('models/results', exist_ok=True)
 
     # Convert the dictionary to a pandas DataFrame
-    df_r18_std = pd.DataFrame.from_dict(accuracies_mean_std, orient='index')
+    df_std = pd.DataFrame.from_dict(accuracies_mean_std, orient='index')
 
     # Save the DataFrame to an Excel file
-    excel_path = 'models/results/mean_std_accuracies_r18_fixed_30.xlsx'
-    df_r18_std.to_excel(excel_path)
+    excel_path = f'models/results/{results_name}.xlsx'
+    df_std.to_excel(excel_path)
 
     print(f"Accuracies saved to {excel_path}")
