@@ -2,9 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import pandas as pd
-from utils.constants import NORMAL_CAT_ID, DATASETS_CATARACT_DIR, DatasetCataractSplit
+from utils.constants import (
+    DEVICE,
+    NORMAL_CAT_ID,
+    DATASETS_CATARACT_DIR,
+    DatasetCataractSplit
+)
 from pycocotools.coco import COCO
-from pathlib import Path
 import pickle
 
 # ground-truth (1: catarata, 0: normal)
@@ -20,6 +24,12 @@ y_true = np.array([
 ])
 
 def calculate_accuracy(y_preds, y_true, proto_path):
+    """
+    Calcula el accuracy por cada conjunto de predicciones realizadas
+    :param y_preds: predicciones realizadas
+    :param y_true: ground truth
+    :param proto_path: dirección donde se encuentra ubicado el prototipo a usar
+    """
     with open(proto_path, "rb") as fp:
         data = pickle.load(fp)
 
@@ -36,6 +46,14 @@ def calculate_accuracy(y_preds, y_true, proto_path):
 
 
 def calculate_mean_std_accuracy(accuracies_by_k, number_of_iterations=10):
+
+    """
+    Calcula la media y desviación estándar de los accuracies calculados
+    por cada prototipo teniendo en cuenta el número de iteraciones realizadas
+    :param accuracies_by_k: accuracies por cada k en que se evaluó el few-shot learning
+    :param number_of_iterations: número de iteraciones realizadas
+    """
+
     accuracy_std_score = {}
 
     # Iterate through each k value
@@ -56,6 +74,12 @@ def calculate_mean_std_accuracy(accuracies_by_k, number_of_iterations=10):
     return accuracy_std_score
 
 def mean_std_plot(accuracies, backbone):
+    """
+    Realiza el gráfico sobre la media y desviación estándar de los accuracies
+    calculados por cada prototipo
+    :param accuracies: accuracies calculados
+    :param backbone: backbone utilizado
+    """
 
     # Convert the dictionary to a pandas DataFrame for easier plotting
     data = {
@@ -102,3 +126,26 @@ def mean_std_plot(accuracies, backbone):
 
     # Show the plot
     plt.show()
+
+def get_mask_generator(model_type: str, checkpoint: str):
+    """
+    Devuelve un SamAutomaticMaskGenerator para:
+
+        • HQ-SAM     (ruta contiene 'hq')
+        • MobileSAM  (ruta contiene 'mobile')
+        • SAM normal (por defecto)
+    """
+    ckpt_name = str(checkpoint).lower()
+
+    if "hq" in ckpt_name:
+        from segment_anything_hq import sam_model_registry, SamAutomaticMaskGenerator
+
+    elif "mobile" in ckpt_name:
+        from mobile_sam import sam_model_registry, SamAutomaticMaskGenerator
+
+    else:
+        from segment_anything import sam_model_registry, SamAutomaticMaskGenerator
+
+    sam = sam_model_registry[model_type](checkpoint=checkpoint).to(DEVICE)
+
+    return SamAutomaticMaskGenerator(sam)

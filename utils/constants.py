@@ -65,4 +65,25 @@ class DatasetCataractSplit(str, Enum):
     TRAIN = "train"
     VALID = "valid"
     TEST  = "test"
+
+class ProtosFileNames(str, Enum):
+    KDE_AUTO_R34 = "kde_univar_protos_auto_r34_seed42.pkl"
+    KDE_SCOTT_R34 = "kde_univar_protos_scott_r34_seed42.pkl"
+    KDE_FIXED_30_VIT_B_16 = "kde_univar_protos_fixed_30_vit_b_16_seed42.pkl"
+    KDE_STURGES_R34 = "kde_univar_protos_sturges_r34_seed42.pkl"
+    KDE_FIXED_30_R34 = "kde_univar_protos_fixed_30_r34_seed42.pkl"
+    KDE_STURGES_VIT_B_16 = "kde_univar_protos_sturges_vit_b_16_seed42.pkl"
+    KDE_FD_R18 = "kde_univar_protos_fd_r18_seed42.pkl"
+    KDE_FD_R34 = "kde_univar_protos_fd_r34_seed42.pkl"
+    KDE_FD_VIT_B_16 = "kde_univar_protos_fd_vit_b_16_seed42.pkl"
+    KDE_FIXED_20_VIT_B_16 = "kde_univar_protos_fixed_20_vit_b_16_seed42.pkl"
+    KDE_AUTO_VIT_B_16 = "kde_univar_protos_auto_vit_b_16_seed42.pkl"
+    KDE_SCOTT_VIT_B_16 = "kde_univar_protos_scott_vit_b_16_seed42.pkl"
+    KDE_SCOTT_R18 = "kde_univar_protos_scott_r18_seed42.pkl"
+    KDE_AUTO_R18 = "kde_univar_protos_auto_r18_seed42.pkl"
+    KDE_FIXED_30_R18 = "kde_univar_protos_fixed_30_r18_seed42.pkl"
+    KDE_FIXED_20_R34 = "kde_univar_protos_fixed_20_r34_seed42.pkl"
+    KDE_FIXED_20_R18 = "kde_univar_protos_fixed_20_r18_seed42.pkl"
+    KDE_STURGES_R18 = "kde_univar_protos_sturges_r18_seed42.pkl"
+
     
