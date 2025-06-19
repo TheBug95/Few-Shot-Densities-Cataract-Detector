@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import pandas as pd
+import os
+import pickle
 from utils.constants import (
     DEVICE,
     NORMAL_CAT_ID,
@@ -9,7 +11,6 @@ from utils.constants import (
     DatasetCataractSplit
 )
 from pycocotools.coco import COCO
-import pickle
 
 # ground-truth (1: catarata, 0: normal)
 split = DatasetCataractSplit.VALID.value
@@ -149,3 +150,22 @@ def get_mask_generator(model_type: str, checkpoint: str):
     sam = sam_model_registry[model_type](checkpoint=checkpoint).to(DEVICE)
 
     return SamAutomaticMaskGenerator(sam)
+
+def export_results_excel(accuracies_mean_std):
+    """
+    Exporta los resultados de las corridas (media y desviación estándar) de los accuracies
+    a un archivo excel
+    :param accuracies_mean_std: media y std de accuracies
+
+    """
+    # Ensure the directory exists
+    os.makedirs('models/results', exist_ok=True)
+
+    # Convert the dictionary to a pandas DataFrame
+    df_r18_std = pd.DataFrame.from_dict(accuracies_mean_std, orient='index')
+
+    # Save the DataFrame to an Excel file
+    excel_path = 'models/results/mean_std_accuracies_r18_fixed_30.xlsx'
+    df_r18_std.to_excel(excel_path)
+
+    print(f"Accuracies saved to {excel_path}")
